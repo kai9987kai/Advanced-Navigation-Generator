@@ -1,206 +1,82 @@
-# Advanced Navigation Generator Pro
+# NavForge Pro 3 — feature-preserving navigation design studio
 
-Advanced Navigation Generator Pro is a single-file React-powered web app for building, previewing, customizing, exporting, and reusing modern website navigation bars. It keeps the original idea of generating custom navigation from page names and links, then upgrades it with responsive layouts, presets, dropdown groups, branding controls, icons, live device previews, code export, JSON import/export, accessibility improvements, and local autosave.
+**Release:** 3.0 · **Editor:** one self-contained HTML file · **Network requirements:** none · **Generated output:** HTML/CSS/JavaScript or React JSX · **Browser verification:** headless Chromium
 
----
+## Start here
 
-## ✨ Overview
+Open `main.html` or `NavForge_Pro_v3.html` in a modern browser. All editing and live preview capabilities run locally, without a CDN or build step. For an immediately usable exported example, open `NavForge_Generated_Example.html`. For React 18+, import `NavForgeNavigation.jsx` into a project that already has React configured.
 
-The original project allowed users to:
+This version is based on the supplied **Advanced Navigation Generator Pro** and is an extension of **NavForge Pro 2**. It restores compatibility for arbitrary *trusted* original inline CSS via an explicit, opt-in mode, preserves interactive preview state while editing, and adds a React JSX component export. It also restores a clearly labelled **Full Page HTML** download regardless of the selected component-only export mode.
 
-- Choose horizontal or vertical navigation.
-- Add page names and links.
-- Generate a navigation preview.
-- Copy generated navigation code.
+## Changes from version 2
 
-This upgraded version keeps those core features and expands the project into a much more complete navigation builder for real websites, dashboards, landing pages, prototypes, and UI experiments.
+1. **Preview-state persistence:** The isolated preview sends its menu-open state, expanded groups and search term to the editor. When a setting causes preview regeneration, the editor restores those states. Communication uses `postMessage`; the iframe **remains sandboxed without `allow-same-origin`**. The editor retains keyboard focus when editing settings. Automatic focus restoration into the iframe was deliberately avoided to prevent stealing focus from the editor.
+2. **Trusted legacy CSS:** Extra inline CSS formerly filtered in Pro 2 can now be exported under **Colours & spacing → Inline CSS compatibility → Legacy: all original declarations**. Original version-1 JSON configurations with declarations outside the safe subset automatically select the legacy option on import. Default **Safe mode** continues to filter risky declarations. Legacy mode permits external resources and unusual styling; use it only with trusted configurations.
+3. **React support:** **React JSX** source tab and **Download React JSX** generate a native React component using React hooks. The exported JSX renders link labels through React (not `dangerouslySetInnerHTML`), supports disclosure groups, touch/mobile menu, search, keyboard operation, and supplies the generated CSS. The editor itself remains a standalone vanilla JavaScript program.
+4. **Full document preserved:** A dedicated **Full Page HTML** action always creates the complete working HTML demo regardless of component export mode. Newly reset projects default to **Complete demo page** mode; users can still choose component-only export. `includeDemoContent` remains an independent toggle for regular full/document exports.
+5. **Safe migration and state:** Configuration keys from the original file and version 2 remain supported, with precedence v3 → v2 → v1 in browser local storage. The existing 4 original presets remain unchanged in availability, plus 2 more presets.
+6. **Regression coverage:** The 39 prior browser checks were retained, and 22 targeted checks were added for preview persistence, legacy CSS, full-page exports and JSX generation. The React code was syntax/transpilation tested, not exercised against a running React installation.
 
-Advanced Navigation Generator Pro is designed to run fully in the browser with no backend required.
+## Preserved features from the original source
 
----
+| Original feature | Pro 3 implementation |
+|---|---|
+| Glass SaaS, Rounded Pill, Clean Minimal, Neo Brutal presets | All four available; Aurora Gradient and Outline Studio additionally available |
+| Horizontal / vertical navigation | Both retained |
+| Normal / sticky / fixed position selection | All retained, with real CSS fixed positioning plus spacer |
+| Brand name, mark and visibility | All retained, plus brand URL and accessible nav label |
+| Colour pickers (background, text and accent), hover colour | All retained |
+| Spacing: radius, gap, padding and font size | All retained; additional controls made explicit |
+| Show icons, show search, responsive mode, animated, compact and transparent | All retained; search now actually filters links |
+| Multiple navigation pages | Name, URL, icon, group, current-page flag, new-tab target all retained |
+| Create/duplicate/delete and reorder pages | All retained, plus undo/redo |
+| Filter builder pages; flatten groups | Both retained |
+| Dropdown group generation | Retained, with functional click/touch, Escape and arrow-key handling |
+| Desktop/tablet/mobile preview | Retained, with adjustable viewport width and state restoration |
+| Live generated HTML, CSS, JSON and full-page output | All retained, plus JS and React JSX output tabs |
+| Copy current code, copy full page, export HTML/JSON, import JSON | All retained, with full-page action, CSS, JS and JSX download options |
+| Local autosave | Retained with v1/v2 configuration migration and local status |
+| Light/dark editor mode | Retained |
+| Additional custom CSS and extra inline declarations | Both retained; legacy toggle for arbitrary trusted original declarations |
+| `exportMode` and `includeDemoContent` configuration | Both retained and now exposed as controls |
+| Toast notices and status | Retained |
 
-## 🚀 Features
+The generator still validates page links and escapes HTML markup. `javascript:` links are blocked instead of being emitted; this is an intentional security restriction compared with permissive original inputs. There are data size/validation limits. Its UI design and framework differ from the original. The original 72 KB file and Pro 2 are included in the ZIP for comparison.
 
-### Core Navigation Builder
+## Exporting and integrating
 
-- Create custom navigation bars visually.
-- Add unlimited navigation items.
-- Edit page name and page link.
-- Choose between horizontal and vertical navigation.
-- Live preview updates as settings change.
-- Generate reusable HTML and CSS.
-- Copy generated code to the clipboard.
+**Standalone HTML:** Click **Full Page HTML** for a complete sample website. **Download HTML** follows the **Download HTML mode** setting; selecting **Component only** generates a standalone document containing navigation but no sample content. The Full Page source tab displays full HTML using the `includeDemoContent` setting. Use the HTML tab for just the navigation markup and combine it with the CSS and JavaScript tabs when embedding into an existing website.
 
-### Modern Layout Controls
+**React:** Select **React JSX**, copy its source, or click **Download React JSX**. Add that file to a React 18+ project and use `import NavForgeNavigation from './NavForgeNavigation';` then `<NavForgeNavigation />`. The exported component includes CSS directly and has its own React state. Configuration is captured at export time. React module resolution and bundling are performed by your application, not the offline generator.
 
-- Horizontal navigation.
-- Vertical sidebar-style navigation.
-- Sticky navigation option.
-- Fixed-style preview option.
-- Compact mode for dashboards and dense interfaces.
-- Responsive hamburger navigation for mobile layouts.
-- Desktop, tablet, and mobile preview modes.
+**JSON backup:** Export JSON before significant edits, especially if browser storage is unavailable. JSON imports are normalized and are limited in size for stability. Version-1 configurations are accepted. Imported trusted original CSS may automatically switch to legacy mode and generate a quality warning.
 
-### Navigation Item Controls
+**Legacy inline styles:** In Safe mode, extra inline declarations are validated against a limited property set. Legacy mode restores arbitrary original declarations; it is not a CSS sandbox. Use only for configurations you author or trust. Extra CSS may load external images/fonts. If you need a strict Content Security Policy, move generated CSS and JavaScript to appropriate standalone assets and review inline styles.
 
-Each page/link supports:
+## Checks and evidence
 
-- Page name.
-- Page URL or anchor link.
-- Optional icon or emoji.
-- Group name.
-- Active page state.
-- Open in new tab option.
-- Reordering.
-- Duplication.
-- Removal.
+- Version 3 was previously tested with 39 baseline and 22 targeted passing Chromium checks. These are historical test results, not CI results for this GitHub commit.
+- Full Python/Playwright test scripts and detailed JSON reports are retained in the downloadable version-3 project package.
+- `NavForge_Pro_v3_AUDIT.md` — bug resolution, feature matrix and known limitations.
 
-### Dropdown Group System
+**Important:** 61 passing checks do not establish equivalence across all browsers, all websites, or all assistive technologies. Tests have not established production WCAG conformance or full runtime compatibility for the React JSX export. Screen readers, Safari, Firefox, external CSS conflicts, large configs and unusual Content Security Policies remain to be validated.
 
-Navigation links can be grouped automatically.
+## Design guidance
 
-Items assigned to `Main` appear directly in the main navigation bar.
+- W3C WAI APG, [Disclosure Navigation Menu](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/)
+- W3C, [WCAG 2.2](https://www.w3.org/TR/WCAG22/)
+- OWASP, [DOM-based XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html)
+- MDN, [Window.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+- React, [Hooks reference](https://react.dev/reference/react/hooks)
 
-Items assigned to another group, such as:
+## GitHub repository structure
 
-- `Resources`
-- `Company`
-- `Tools`
-- `Docs`
-- `Account`
+- `index.html` redirects GitHub Pages visitors to the self-contained editor.
+- `main.html` is the maintained main application.
+- `NavForge_Pro_v3.html` is an identical version-stamped copy for standalone use.
+- `NavForgeNavigation.jsx` is the optional React 18+ component export.
+- `examples/NavForge_Generated_Example.html` demonstrates a standalone exported navigation.
+- `docs/FEATURE_AUDIT.md` contains the original feature-compatibility audit.
+- `legacy/Advanced_Navigation_Generator_Original.html` preserves the former `main.html` implementation.
 
-are automatically placed inside dropdown menus.
-
-### Branding Controls
-
-- Show or hide brand area.
-- Custom brand name.
-- Custom brand mark / initial.
-- Gradient brand badge.
-- Accessible home link label.
-
-### Style Presets
-
-Includes several built-in navigation style presets:
-
-- **Glass SaaS** — translucent blurred modern nav.
-- **Rounded Pill** — soft rounded app-style navigation.
-- **Clean Minimal** — simple white professional navigation.
-- **Neo Brutal** — bold high-contrast playful style.
-
-### Visual Customization
-
-Customize:
-
-- Background color.
-- Text color.
-- Accent color.
-- Hover background.
-- Border radius.
-- Link gap.
-- Padding.
-- Font size.
-- Transparent glass effect.
-- Animated hover underline.
-- Custom CSS.
-
-### Search Bar Toggle
-
-Optionally add a search field inside the generated navigation.
-
-Useful for:
-
-- Documentation sites.
-- Dashboards.
-- Tool hubs.
-- Large content websites.
-- Admin interfaces.
-
-### Live Preview
-
-The app includes a live preview area with:
-
-- Desktop preview.
-- Tablet preview.
-- Mobile preview.
-- Mobile menu toggle simulation.
-- Mock page content.
-- Real dropdown behavior.
-- Same styling used by exported code.
-
-### Code Export
-
-Generate and copy:
-
-- Full standalone HTML page.
-- Navigation-only HTML.
-- CSS-only output.
-- JSON configuration.
-
-### Import / Export
-
-- Download a full `.html` file.
-- Export navigation settings as `.json`.
-- Import a saved `.json` configuration.
-- Continue editing previous navigation setups.
-
-### Local Autosave
-
-The app automatically saves your current navigation builder state in `localStorage`.
-
-Saved data includes:
-
-- Navigation items.
-- Style settings.
-- Brand settings.
-- Feature toggles.
-- Theme mode.
-
-### Accessibility Improvements
-
-The generated navigation includes:
-
-- `aria-label` for main navigation.
-- `aria-current="page"` for active links.
-- Accessible mobile menu button labels.
-- Dropdown menu structure.
-- Safer external link handling with `rel="noopener noreferrer"`.
-- Keyboard-focus-friendly link styles.
-
-### Safer Code Generation
-
-The upgraded version avoids the main issues in the original version:
-
-- Does not call `outerHTML` on React elements.
-- Does not pass invalid string styles into React’s `style` prop.
-- Escapes generated HTML safely.
-- Blocks dangerous `javascript:` links.
-- Uses structured navigation data to generate output reliably.
-
----
-
-## 🧠 Why This Version Is Better
-
-The original version was a basic navigation generator. This version turns it into a full navigation design studio.
-
-| Area | Original Version | Advanced Version |
-|---|---|---|
-| Navigation types | Horizontal / vertical | Horizontal / vertical / responsive / sticky |
-| Styling | Raw style text input | Visual controls, presets, custom CSS |
-| Page items | Name and link | Name, link, icon, group, active state, new tab |
-| Preview | Basic nav preview | Desktop, tablet, mobile live preview |
-| Code generation | Bug-prone React element output | Safe structured HTML/CSS generation |
-| Export | Copy generated code | Copy, download HTML, export/import JSON |
-| Persistence | None | Local autosave |
-| Accessibility | Minimal | ARIA labels, active states, safer links |
-| Mobile support | None | Responsive hamburger mode |
-| Dropdowns | None | Automatic grouped dropdowns |
-
----
-
-## 📁 Project Structure
-
-This is a single-file app.
-
-```text
-advanced-navigation-generator-pro.html
+For GitHub Pages, publish the repository root of the `main` branch. `index.html` opens the editor at `main.html`.
